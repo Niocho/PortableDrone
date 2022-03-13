@@ -1,13 +1,14 @@
 package com.niocho.www.portabledrone.dataobject
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
+
+enum class Role {
+    USER,
+    ADMIN
+}
 
 @Entity
-class Drone (
+class User (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -15,5 +16,8 @@ class Drone (
     @Column(nullable = false, unique = true)
     var name: String,
     @Column(length = 4096)
-    var description: String?
+    var description: String?,
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    var role: Role
 )

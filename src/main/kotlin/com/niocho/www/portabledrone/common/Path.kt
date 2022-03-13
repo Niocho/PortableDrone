@@ -5,5 +5,6 @@ class Path {
         const val REPOSITORY = "data"
         const val DRONE = "drone"
         const val DRONE_METADATA = "droneMetadata"
+        const val USER = "user"
     }
 }

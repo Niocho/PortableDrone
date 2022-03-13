@@ -8,11 +8,11 @@ import org.springframework.data.rest.core.annotation.RestResource
 import java.util.*
 
 @RepositoryRestResource(collectionResourceRel = Path.DRONE, path = Path.DRONE)
-interface DroneRepository : JpaRepository<Drone, Int>{
-    fun findDroneById(id: Int): Optional<Drone>
+interface DroneRepository : JpaRepository<Drone, Long>{
+    fun findDroneById(id: Long): Optional<Drone>
     fun findDroneByName(name: String): Optional<Drone>
     @RestResource(exported = false)
     override fun delete(entity: Drone)
     @RestResource(exported = false)
-    override fun deleteById(id: Int)
+    override fun deleteById(id: Long)
 }

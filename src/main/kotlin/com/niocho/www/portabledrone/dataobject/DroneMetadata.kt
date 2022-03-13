@@ -2,6 +2,11 @@ package com.niocho.www.portabledrone.dataobject
 
 import javax.persistence.*
 
+object Metadata {
+    const val AES_PASSWORD = "aes_password"
+    const val BELONG_TO_USER = "belong_to_user"
+}
+
 @Entity
 class DroneMetadata (
     @Id

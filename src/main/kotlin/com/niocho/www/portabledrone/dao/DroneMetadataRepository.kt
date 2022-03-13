@@ -13,7 +13,7 @@ interface DroneMetadataRepository : JpaRepository<DroneMetadata, Int> {
     fun findDroneMetadataById(id: Int): Optional<DroneMetadata>
     fun findDroneMetadataByKey(key: String): Optional<DroneMetadata>
     fun findDroneMetadataByValue(value: String): Optional<DroneMetadata>
-    fun findDroneMetadataByBelongTo(drone: Drone): Optional<DroneMetadata>
+    fun findDroneMetadataByBelongTo(drone: Drone): List<DroneMetadata>
     @RestResource(exported = false)
     override fun delete(entity: DroneMetadata)
     @RestResource(exported = false)

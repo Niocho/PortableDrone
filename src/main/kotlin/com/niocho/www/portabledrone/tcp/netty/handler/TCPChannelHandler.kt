@@ -30,8 +30,9 @@ class TCPChannelHandler(private val droneService: DroneService, private val inte
 
         parsers[ctx.channel()] ?.let { parser ->
             msg.forEach { byte ->
-                val message = parser.mavlink_parse_char(byte.toInt()).unpack()
-                if (message != null) {
+                val packet = parser.mavlink_parse_char(byte.toInt())
+                if (packet != null) {
+                    val message = packet.unpack()
                     val integrationMessage = MavlinkMessage(
                         channel = ctx.channel(),
                         ipAddress = (ctx.channel().remoteAddress() as InetSocketAddress).hostName,

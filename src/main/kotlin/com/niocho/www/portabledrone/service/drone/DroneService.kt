@@ -16,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec
 class DroneService (
     @Autowired
     val droneRepository: DroneRepository,
+    @Autowired
     val droneMetadataRepository: DroneMetadataRepository
     ){
 

@@ -9,13 +9,13 @@ import org.springframework.data.rest.core.annotation.RestResource
 import java.util.Optional
 
 @RepositoryRestResource(collectionResourceRel = Path.DRONE_METADATA, path = Path.DRONE_METADATA)
-interface DroneMetadataRepository : JpaRepository<DroneMetadata, Int> {
-    fun findDroneMetadataById(id: Int): Optional<DroneMetadata>
+interface DroneMetadataRepository : JpaRepository<DroneMetadata, Long> {
+    fun findDroneMetadataById(id: Long): Optional<DroneMetadata>
     fun findDroneMetadataByKey(key: String): Optional<DroneMetadata>
     fun findDroneMetadataByValue(value: String): Optional<DroneMetadata>
     fun findDroneMetadataByBelongTo(drone: Drone): List<DroneMetadata>
     @RestResource(exported = false)
     override fun delete(entity: DroneMetadata)
     @RestResource(exported = false)
-    override fun deleteById(id: Int)
+    override fun deleteById(id: Long)
 }

@@ -12,7 +12,7 @@ class DroneMetadata (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Int,
+    var id: Long,
     @ManyToOne(targetEntity = Drone::class, cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = false)
     var belongTo: Drone,
     @Column(name = "[key]", nullable = false)

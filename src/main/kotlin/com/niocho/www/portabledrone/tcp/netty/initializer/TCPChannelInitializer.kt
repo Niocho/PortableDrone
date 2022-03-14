@@ -15,7 +15,7 @@ class TCPChannelInitializer(private val droneService: DroneService, private val 
     override fun initChannel(ch: NioSocketChannel?) {
         /**
          * data stream:
-         *              mavlink packet -> byte stream -> aes256 / none -> base64(string) -> line delimiter -> base64(string) -> aes256 / none -> byte stream -> mavlink packet
+         *              mavlink packet -> byte stream(base64) -> aes256 / none -> base64(string) -> line delimiter -> base64(string) -> aes256 / none -> byte stream(base64) -> mavlink packet
          */
         ch ?.let { channel ->
             channel.pipeline().addLast(AESEncoder())

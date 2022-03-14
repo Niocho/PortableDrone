@@ -1,10 +1,13 @@
 package com.niocho.www.portabledrone.tcp.config
 
+import com.niocho.www.portabledrone.tcp.dto.MavlinkMessage
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageHandler
 
-class MavlinkActivator: MessageHandler {
+class MavlinkInboundActivator: MessageHandler {
     override fun handleMessage(message: Message<*>) {
-        println(message.payload)
+        if (message is MavlinkMessage) {
+            println(message.headers)
+        }
     }
 }

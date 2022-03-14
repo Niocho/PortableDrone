@@ -4,11 +4,12 @@ import com.mavlink.Messages.MAVLinkMessage
 import io.netty.channel.Channel
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageHeaders
+import java.net.InetSocketAddress
 
 class MavlinkMessage(
     val channel: Channel,
-    val ipAddress: String,
-    val port: Int,
+    val ipAddress: String = (channel.remoteAddress() as InetSocketAddress).hostName,
+    val port: Int = (channel.remoteAddress() as InetSocketAddress).port,
     val droneId: Long,
     var message: MAVLinkMessage
 ) : Message<MAVLinkMessage> {

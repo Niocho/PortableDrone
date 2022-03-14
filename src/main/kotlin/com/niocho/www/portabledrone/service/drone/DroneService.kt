@@ -1,7 +1,10 @@
 package com.niocho.www.portabledrone.service.drone
 
+import com.mavlink.Messages.MAVLinkMessage
 import com.niocho.www.portabledrone.dao.DroneMetadataRepository
 import com.niocho.www.portabledrone.dao.DroneRepository
+import com.niocho.www.portabledrone.tcp.config.MavlinkGateway
+import com.niocho.www.portabledrone.tcp.dto.MavlinkMessage
 import io.netty.channel.Channel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.BadCredentialsException
@@ -17,8 +20,15 @@ class DroneService (
     @Autowired
     val droneRepository: DroneRepository,
     @Autowired
-    val droneMetadataRepository: DroneMetadataRepository
+    val droneMetadataRepository: DroneMetadataRepository,
+    @Autowired
+    val mavlinkGateway: MavlinkGateway
     ){
+
+    /**
+     * 用于连接的缓存在内存中的无人机实体对象
+     */
+    val droneCache: MutableMap<Channel, SimpleDrone> = mutableMapOf()
 
     /**
      * 负责 AES 算法的加解密
@@ -73,11 +83,18 @@ class DroneService (
         return droneCache[channel]
     }
 
-    /**
-     * 用于连接的缓存在内存中的无人机实体对象
-     */
-    val droneCache: MutableMap<Channel, SimpleDrone> = mutableMapOf()
+    fun deleteSimpleDrone(channel: Channel) {
+        droneCache.remove(channel)
+    }
 
+    fun send(droneId: Long, message: MAVLinkMessage) {
+        droneCache.forEach { drone ->
+            if (drone.value.id == droneId) {
+                val msg = MavlinkMessage(drone.key, droneId = droneId, message = message)
+                mavlinkGateway.sendMavlinkMessage(msg)
+            }
+        }
+    }
     /**
      * 无人机认证算法，如果无人机的 metadata 中给出了 AES_PASSWORD 项，就会进行认证，反之会直接通过无人机连接请求
      */
@@ -139,9 +156,5 @@ class DroneService (
         } ?: run {
             return data
         }
-    }
-
-    fun deleteSimpleDrone(channel: Channel) {
-        droneCache.remove(channel)
     }
 }

@@ -2,7 +2,7 @@ package com.niocho.www.portabledrone.tcp.netty.initializer
 
 import com.niocho.www.portabledrone.service.drone.DroneService
 import com.niocho.www.portabledrone.tcp.netty.decoder.AESDecoder
-import com.niocho.www.portabledrone.tcp.netty.encoder.AESEncoder
+import com.niocho.www.portabledrone.tcp.netty.encoder.MavlinkEncoder
 import com.niocho.www.portabledrone.tcp.netty.handler.TCPChannelHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -18,7 +18,7 @@ class TCPChannelInitializer(private val droneService: DroneService, private val 
          *              mavlink packet -> byte stream(base64) -> aes256 / none -> base64(string) -> line delimiter -> base64(string) -> aes256 / none -> byte stream(base64) -> mavlink packet
          */
         ch ?.let { channel ->
-            channel.pipeline().addLast(AESEncoder())
+            channel.pipeline().addLast(MavlinkEncoder(droneService))
             channel.pipeline().addLast(StringDecoder(), DelimiterBasedFrameDecoder(8192, * Delimiters.lineDelimiter()), AESDecoder(droneService))
             channel.pipeline().addLast(TCPChannelHandler(droneService, messageChannel))
         }

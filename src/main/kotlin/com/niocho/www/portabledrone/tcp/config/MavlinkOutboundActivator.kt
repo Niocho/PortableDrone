@@ -7,7 +7,7 @@ import org.springframework.messaging.MessageHandler
 class MavlinkOutboundActivator : MessageHandler {
     override fun handleMessage(message: Message<*>) {
         if (message is MavlinkMessage) {
-            message.channel.write(message.message.pack().encodePacket())
+            message.channel.write(message.message)
         } else {
             throw RuntimeException("given message is not mavlink message")
         }

@@ -1,5 +1,6 @@
 package com.niocho.www.portabledrone.config.security
 
+import com.niocho.www.portabledrone.config.security.filter.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -27,6 +28,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 ?.anyRequest()
                 ?.authenticated()
             ?.and()
+                ?.addFilter(AuthenticationFilter(authenticationManagerBean()))
 //            ?.addFilterBefore()
     }
 

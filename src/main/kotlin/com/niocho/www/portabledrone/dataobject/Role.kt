@@ -3,7 +3,7 @@ package com.niocho.www.portabledrone.dataobject
 import javax.persistence.*
 
 @Entity
-class User (
+class Role (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -12,6 +12,4 @@ class User (
     var name: String,
     @Column(length = 4096)
     var description: String?,
-    @ManyToOne(optional = false)
-    var role: Role
 )

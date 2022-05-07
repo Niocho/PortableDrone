@@ -2,12 +2,15 @@ package com.niocho.www.portabledrone.config.security
 
 import com.niocho.www.portabledrone.config.security.filter.JSONAuthenticationFilter
 import com.niocho.www.portabledrone.config.security.filter.JWTAuthenticationFilter
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
@@ -19,7 +22,10 @@ import javax.servlet.http.HttpServletResponse
     securedEnabled = true,
     jsr250Enabled = true
 )
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig(
+    @Autowired
+    val builder: Jackson2ObjectMapperBuilder
+) : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.cors()?.and()?.csrf()?.disable()
                 ?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -29,14 +35,16 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                     exp.message
                 ) }
             ?.and()
+            ?.anonymous()
+            ?.and()
                 ?.authorizeRequests()
                 ?.antMatchers("/**")
                 ?.permitAll()
                 ?.anyRequest()
                 ?.authenticated()
             ?.and()
-                ?.addFilter(JSONAuthenticationFilter(authenticationManager()))
-                ?.addFilterAfter(JWTAuthenticationFilter(authenticationManager()), JSONAuthenticationFilter::class.java)
+                ?.addFilterBefore(JWTAuthenticationFilter(authenticationManager()), AnonymousAuthenticationFilter::class.java)
+                ?.addFilterBefore(JSONAuthenticationFilter(authenticationManager(), builder), JWTAuthenticationFilter::class.java)
     }
 
     @Bean

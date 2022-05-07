@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority
 class JSONAuthentication(
     val username: String,
     var password: String,
+    val jwtToken: String = "",
     val authorities: MutableSet<PortableDroneRole> = mutableSetOf(),
     var authenticate: Boolean = false,
 ) : Authentication {

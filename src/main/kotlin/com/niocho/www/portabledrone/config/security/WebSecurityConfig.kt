@@ -1,8 +1,10 @@
 package com.niocho.www.portabledrone.config.security
 
-import com.niocho.www.portabledrone.config.security.filter.AuthenticationFilter
+import com.niocho.www.portabledrone.config.security.filter.JSONAuthenticationFilter
+import com.niocho.www.portabledrone.config.security.filter.JWTAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -12,6 +14,11 @@ import org.springframework.web.filter.CorsFilter
 import javax.servlet.http.HttpServletResponse
 
 @Configuration
+@EnableGlobalMethodSecurity(
+    prePostEnabled = true,
+    securedEnabled = true,
+    jsr250Enabled = true
+)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.cors()?.and()?.csrf()?.disable()
@@ -28,8 +35,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 ?.anyRequest()
                 ?.authenticated()
             ?.and()
-                ?.addFilter(AuthenticationFilter(authenticationManagerBean()))
-//            ?.addFilterBefore()
+                ?.addFilter(JSONAuthenticationFilter(authenticationManager()))
+                ?.addFilterAfter(JWTAuthenticationFilter(authenticationManager()), JSONAuthenticationFilter::class.java)
     }
 
     @Bean

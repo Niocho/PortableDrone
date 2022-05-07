@@ -39,6 +39,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    implementation("com.auth0:java-jwt:3.19.2")
 }
 
 tasks.withType<KotlinCompile> {

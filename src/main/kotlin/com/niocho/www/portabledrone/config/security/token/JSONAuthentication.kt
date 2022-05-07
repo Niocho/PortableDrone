@@ -1,34 +1,40 @@
 package com.niocho.www.portabledrone.config.security.token
 
+import com.niocho.www.portabledrone.config.security.common.PortableDroneRole
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
-class JSONAuthentication : Authentication {
+class JSONAuthentication(
+    val username: String,
+    var password: String,
+    val authorities: MutableSet<PortableDroneRole> = mutableSetOf(),
+    var authenticate: Boolean = false,
+) : Authentication {
     override fun getName(): String {
-        TODO("Not yet implemented")
+        return username
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        TODO("Not yet implemented")
+        return authorities
     }
 
     override fun getCredentials(): Any {
-        TODO("Not yet implemented")
+        return password
     }
 
     override fun getDetails(): Any {
-        TODO("Not yet implemented")
+        return username
     }
 
     override fun getPrincipal(): Any {
-        TODO("Not yet implemented")
+        return username
     }
 
     override fun isAuthenticated(): Boolean {
-        TODO("Not yet implemented")
+        return authenticate
     }
 
     override fun setAuthenticated(isAuthenticated: Boolean) {
-        TODO("Not yet implemented")
+        this.authenticate = isAuthenticated
     }
 }

@@ -10,6 +10,8 @@ class User (
     var id: Long,
     @Column(nullable = false, unique = true)
     var name: String,
+    @Column(nullable = false)
+    var password: String,
     @Column(length = 4096)
     var description: String?,
     @ManyToOne(optional = false)

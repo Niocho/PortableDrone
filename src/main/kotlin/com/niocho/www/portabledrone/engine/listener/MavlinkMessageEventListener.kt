@@ -1,6 +1,6 @@
 package com.niocho.www.portabledrone.engine.listener
 
-import com.niocho.www.portabledrone.common.event.MavlinkMessageEvent
+import com.niocho.www.portabledrone.common.event.impl.MavlinkMessageEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 

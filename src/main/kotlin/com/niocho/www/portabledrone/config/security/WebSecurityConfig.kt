@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -50,6 +52,7 @@ class WebSecurityConfig(
             ?.and()
             ?.authenticationProvider(JSONAuthenticationProvider(userService))
             ?.authenticationProvider(JWTAuthenticationProvider())
+            ?.authenticationProvider(daoAuthenticationProvider())
                 ?.addFilterBefore(JWTAuthenticationFilter(authenticationManager()), AnonymousAuthenticationFilter::class.java)
                 ?.addFilterBefore(JSONAuthenticationFilter(authenticationManager(), builder), JWTAuthenticationFilter::class.java)
     }
@@ -64,5 +67,17 @@ class WebSecurityConfig(
         config.addAllowedMethod("*")
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
+    }
+
+    @Bean
+    fun daoAuthenticationProvider() : DaoAuthenticationProvider {
+        val daoAuthenticationProvider = DaoAuthenticationProvider()
+        daoAuthenticationProvider.setUserDetailsService(userService)
+        return daoAuthenticationProvider
+    }
+
+    @Bean
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 }

@@ -1,8 +1,11 @@
 package com.niocho.www.portabledrone.common.event
 
+import org.springframework.context.ApplicationEvent
+
 abstract class Event(
+    source: Any,
     var isAsync: Boolean = false
-) {
+) : ApplicationEvent(source) {
     abstract fun getEventName(): String
     abstract fun getHandlers(): HandlerList
     fun isAsynchronous(): Boolean {

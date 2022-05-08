@@ -18,6 +18,4 @@ class UserService(
             user.get().role.name
         )
     }
-
-
 }

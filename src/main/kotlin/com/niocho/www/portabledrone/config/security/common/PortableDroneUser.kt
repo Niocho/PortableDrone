@@ -2,6 +2,7 @@ package com.niocho.www.portabledrone.config.security.common
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 class PortableDroneUser(
     private val usrname: String,
@@ -34,5 +35,9 @@ class PortableDroneUser(
 
     override fun isEnabled(): Boolean {
         return true
+    }
+
+    fun authenticate(password: String) : Boolean {
+        return BCryptPasswordEncoder().matches(password, encryptedPassword)
     }
 }

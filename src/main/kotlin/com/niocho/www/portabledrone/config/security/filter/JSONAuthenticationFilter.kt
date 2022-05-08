@@ -2,7 +2,7 @@ package com.niocho.www.portabledrone.config.security.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.niocho.www.portabledrone.common.Path
-import com.niocho.www.portabledrone.config.security.token.JSONAuthentication
+import com.niocho.www.portabledrone.config.security.token.JSONAuthenticationToken
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.security.authentication.AuthenticationManager
@@ -36,13 +36,13 @@ class JSONAuthenticationFilter(
                         it
                     }
                     val result = objectMapper.readValue(body, JSONLoginRequest::class.java)
-                    val authentication = authenticationManager.authenticate(JSONAuthentication(
+                    val authentication = authenticationManager.authenticate(JSONAuthenticationToken(
                         username = result.username,
                         password = result.password
                     ))
                     SecurityContextHolder.getContext().authentication = authentication
                     (response as HttpServletResponse).status = HttpStatus.OK.value()
-                    response.addHeader("Authentication", (authentication as JSONAuthentication).jwtToken)
+                    response.addHeader("Authentication", (authentication as JSONAuthenticationToken).jwtToken)
                     response.writer.close()
                 } catch (e: AuthenticationException) {
                     (response as HttpServletResponse).status = HttpStatus.FORBIDDEN.value()

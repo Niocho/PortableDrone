@@ -2,6 +2,9 @@ package com.niocho.www.portabledrone.config.security
 
 import com.niocho.www.portabledrone.config.security.filter.JSONAuthenticationFilter
 import com.niocho.www.portabledrone.config.security.filter.JWTAuthenticationFilter
+import com.niocho.www.portabledrone.config.security.provider.JSONAuthenticationProvider
+import com.niocho.www.portabledrone.config.security.provider.JWTAuthenticationProvider
+import com.niocho.www.portabledrone.service.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,7 +27,9 @@ import javax.servlet.http.HttpServletResponse
 )
 class WebSecurityConfig(
     @Autowired
-    val builder: Jackson2ObjectMapperBuilder
+    val builder: Jackson2ObjectMapperBuilder,
+    @Autowired
+    val userService: UserService
 ) : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.cors()?.and()?.csrf()?.disable()
@@ -43,6 +48,8 @@ class WebSecurityConfig(
                 ?.anyRequest()
                 ?.authenticated()
             ?.and()
+            ?.authenticationProvider(JSONAuthenticationProvider(userService))
+            ?.authenticationProvider(JWTAuthenticationProvider())
                 ?.addFilterBefore(JWTAuthenticationFilter(authenticationManager()), AnonymousAuthenticationFilter::class.java)
                 ?.addFilterBefore(JSONAuthenticationFilter(authenticationManager(), builder), JWTAuthenticationFilter::class.java)
     }

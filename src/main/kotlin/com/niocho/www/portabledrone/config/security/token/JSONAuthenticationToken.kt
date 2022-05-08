@@ -4,10 +4,10 @@ import com.niocho.www.portabledrone.config.security.common.PortableDroneRole
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
-class JSONAuthentication(
+class JSONAuthenticationToken(
     val username: String,
     var password: String,
-    val jwtToken: String = "",
+    var jwtToken: String = "",
     val authorities: MutableSet<PortableDroneRole> = mutableSetOf(),
     var authenticate: Boolean = false,
 ) : Authentication {

@@ -7,8 +7,9 @@ import com.niocho.www.portabledrone.common.Constant
 import com.niocho.www.portabledrone.config.security.common.PortableDroneRole
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
+import java.util.Date
 
-class JWTAuthentication(
+class JWTAuthenticationToken(
     private val jwtToken: String,
     var usrname: String,
     var role: String,
@@ -51,5 +52,18 @@ class JWTAuthentication(
 
     override fun setAuthenticated(isAuthenticated: Boolean) {
         this.authenticate = isAuthenticated
+    }
+
+    fun shouldUpdate(): Boolean {
+        val decodedJWT = JWT.decode(jwtToken)
+        return decodedJWT.expiresAt.time - System.currentTimeMillis() < Constant.JWT_EXPIRED_TIME
+    }
+
+    fun flushJWTToken(): String {
+        return JWT.create()
+            .withSubject(usrname)
+            .withClaim("role", role)
+            .withExpiresAt(Date(System.currentTimeMillis() + Constant.JWT_EXPIRED_TIME))
+            .sign(Algorithm.HMAC256(Constant.JWT_SECRET))
     }
 }
